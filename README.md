@@ -1,34 +1,18 @@
 SwiftCron
 ==============
-[![codecov](https://codecov.io/gh/TheCodedSelf/SwiftCron/branch/master/graph/badge.svg)](https://codecov.io/gh/TheCodedSelf/SwiftCron) [![CocoaPod Version](https://img.shields.io/cocoapods/v/SwiftCron.svg)](http://cocoapods.org/pods/SwiftCron)
 
 A cron expression parser that can take a cron string and give you the next run date and time specified in the string.
 
 <br/>
 
 ## Installation
-### CocoaPods
-
-Podfile:
-
-```ruby
-pod 'SwiftCron'
-```
-
-### Carthage
-
-Cartfile:
-
-```
-github "thecodedself/swiftcron" >= 0.4.5
-```
 
 ### Swift Package Manager
 
 Package.swift:
 
 ```
-.Package(url: "https://github.com/TheCodedSelf/SwiftCron.git", majorVersion: 0)
+.Package(url: "https://github.com/flexlixrup/SwiftCron.git")
 ```
 
 ## Requirements
@@ -101,5 +85,3 @@ let nextRun = cronExpression.getNextRunDateFromNow(adjustingForTimeZone: losAnge
 ## Contributing
 
 - Pull requests for bug fixes and new features are most welcome.
-- Pull requests will only be merged once the Travis CI build passes.
-

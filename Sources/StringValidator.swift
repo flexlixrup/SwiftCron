@@ -8,8 +8,7 @@
 
 import Foundation
 
-struct StringValidator {
-
+enum StringValidator {
     static func isUpperCaseOrNumber(_ value: String) -> Bool {
         return validate(value, regex: "[\\*,\\/\\-0-9A-Z]+")
     }

@@ -1,4 +1,5 @@
 import Foundation
+
 /*
  * * * * *
  | | | | |
@@ -18,144 +19,185 @@ import Foundation
  -------------- Minute
  */
 public class CronExpression {
+    var cronRepresentation: CronRepresentation
 
-	var cronRepresentation: CronRepresentation
+    public convenience init?(cronString: String) {
+        guard let cronRepresentation = CronRepresentation(cronString: cronString) else {
+            return nil
+        }
+        self.init(cronRepresentation: cronRepresentation)
+    }
 
-	public convenience init?(cronString: String) {
-		guard let cronRepresentation = CronRepresentation(cronString: cronString) else {
-			return nil
-		}
-		self.init(cronRepresentation: cronRepresentation)
-	}
+    public convenience init?(minute: CronFieldTranslatable = CronRepresentation.DefaultValue, hour: CronFieldTranslatable = CronRepresentation.DefaultValue, day: CronFieldTranslatable = CronRepresentation.DefaultValue, month: CronFieldTranslatable = CronRepresentation.DefaultValue, weekday: CronFieldTranslatable = CronRepresentation.DefaultValue, year: CronFieldTranslatable = CronRepresentation.DefaultValue) {
+        let cronRepresentation = CronRepresentation(minute: minute.cronFieldRepresentation, hour: hour.cronFieldRepresentation, day: day.cronFieldRepresentation, month: month.cronFieldRepresentation, weekday: weekday.cronFieldRepresentation, year: year.cronFieldRepresentation)
+        self.init(cronRepresentation: cronRepresentation)
+    }
 
-	public convenience init?(minute: CronFieldTranslatable = CronRepresentation.DefaultValue, hour: CronFieldTranslatable = CronRepresentation.DefaultValue, day: CronFieldTranslatable = CronRepresentation.DefaultValue, month: CronFieldTranslatable = CronRepresentation.DefaultValue, weekday: CronFieldTranslatable = CronRepresentation.DefaultValue, year: CronFieldTranslatable = CronRepresentation.DefaultValue) {
-		let cronRepresentation = CronRepresentation(minute: minute.cronFieldRepresentation, hour: hour.cronFieldRepresentation, day: day.cronFieldRepresentation, month: month.cronFieldRepresentation, weekday: weekday.cronFieldRepresentation, year: year.cronFieldRepresentation)
-		self.init(cronRepresentation: cronRepresentation)
-	}
+    private init?(cronRepresentation theCronRepresentation: CronRepresentation) {
+        cronRepresentation = theCronRepresentation
 
-	private init?(cronRepresentation theCronRepresentation: CronRepresentation) {
-		cronRepresentation = theCronRepresentation
+        let parts = cronRepresentation.cronParts
+        for index: Int in 0 ..< parts.count {
+            let field = CronField(rawValue: index)!
+            if field.getFieldChecker().validate(parts[index]) == false {
+                NSLog("\(#function): Invalid cron field value \(parts[index]) at position \(index)")
+                return nil
+            }
+        }
+    }
 
-		let parts = cronRepresentation.cronParts
-		for index: Int in 0 ..< parts.count {
-			let field = CronField(rawValue: index)!
-			if field.getFieldChecker().validate(parts[index]) == false {
-				NSLog("\(#function): Invalid cron field value \(parts[index]) at position \(index)")
-				return nil
-			}
-		}
-	}
+    public var stringRepresentation: String {
+        return cronRepresentation.cronString
+    }
 
-	public var stringRepresentation: String {
-		return cronRepresentation.cronString
-	}
+    // MARK: - Description
 
-	// MARK: - Description
+    public var shortDescription: String {
+        return CronDescriptionBuilder.buildDescription(cronRepresentation, length: .short)
+    }
 
-	public var shortDescription: String {
-		return CronDescriptionBuilder.buildDescription(cronRepresentation, length: .short)
-	}
+    public var longDescription: String {
+        return CronDescriptionBuilder.buildDescription(cronRepresentation, length: .long)
+    }
 
-	public var longDescription: String {
-		return CronDescriptionBuilder.buildDescription(cronRepresentation, length: .long)
-	}
-
-	// MARK: - Get Next Run Date
+    // MARK: - Get Next Run Date
 
     public func getNextRunDateFromNow(adjustingForTimeZone outputTimeZone: TimeZone = .current) -> Date? {
-		return getNextRunDate(Date(), adjustingForTimeZone: outputTimeZone)
-	}
+        return getNextRunDate(Date(), adjustingForTimeZone: outputTimeZone)
+    }
 
-	public func getNextRunDate(_ date: Date, adjustingForTimeZone outputTimeZone: TimeZone = .current) -> Date? {
-        guard let nextRun = getNextRunDate(date, skip: 0) else { return nil }
+    public func getNextRunDate(_ date: Date, adjustingForTimeZone outputTimeZone: TimeZone = .current) -> Date? {
+        guard let nextRun = getNextRunDate(date, skip: 0) else {
+            return nil
+        }
         return adjust(date: nextRun, for: outputTimeZone)
-	}
-    
+    }
+
     func adjust(date: Date, for timeZone: TimeZone) -> Date {
         let currentTZOffset = TimeZone.current.secondsFromGMT(for: date)
         let outputTZOffset = timeZone.secondsFromGMT(for: date)
-        
+
         let tzDifference = TimeInterval(currentTZOffset - outputTZOffset)
         return date.addingTimeInterval(tzDifference)
     }
 
-	func getNextRunDate(_ date: Date, skip: Int) -> Date? {
-		guard matchIsTheoreticallyPossible(date) else {
-			return nil
-		}
+    func getNextRunDate(_ date: Date, skip: Int) -> Date? {
+        guard matchIsTheoreticallyPossible(date) else {
+            return nil
+        }
 
-		var timesToSkip = skip
-		let calendar = Calendar.current
-		var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .weekday], from: date)
-		components.second = 0
+        var timesToSkip = skip
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .weekday], from: date)
+        components.second = 0
 
-		var nextRun = calendar.date(from: components)!
+        var nextRun = calendar.date(from: components)!
 
-		// MARK: Issue 3: Instantiate enum instances with the right value
-		let allFieldsInExpression: Array<CronField> = [.minute, .hour, .day, .month, .weekday, .year]
+        // MARK: Issue 3: Instantiate enum instances with the right value
 
-		// Set a hard limit to bail on an impossible date
-		iteration: for _: Int in 0 ..< 1000 {
-			var satisfied = false
+        let allFieldsInExpression: [CronField] = [.minute, .hour, .day, .month, .weekday, .year]
 
-			currentFieldLoop: for cronField: CronField in allFieldsInExpression {
-				// MARK: Issue 3: just call cronField.isSatisfiedBy, or getNextApplicableDate as specified in Issue 2
-				let part = cronRepresentation[cronField.rawValue]
-				let fieldChecker = cronField.getFieldChecker()
+        // Set a hard limit to bail on an impossible date
+        iteration: for _: Int in 0 ..< 1000 {
+            var satisfied = false
 
-				if part.contains(CronRepresentation.ListIdentifier) == false {
-					satisfied = fieldChecker.isSatisfiedBy(nextRun, value: part)
-				} else {
-					for listPart: String in part.components(separatedBy: CronRepresentation.ListIdentifier) {
-						satisfied = fieldChecker.isSatisfiedBy(nextRun, value: listPart)
-						if satisfied {
-							break
-						}
-					}
-				}
+            currentFieldLoop: for cronField: CronField in allFieldsInExpression {
+                // MARK: Issue 3: just call cronField.isSatisfiedBy, or getNextApplicableDate as specified in Issue 2
 
-				// If the field is not satisfied, then start over
-				if satisfied == false {
-					nextRun = fieldChecker.increment(nextRun, toMatchValue: part)
-					continue iteration
-				}
+                let part = cronRepresentation[cronField.rawValue]
+                let fieldChecker = cronField.getFieldChecker()
 
-				// Skip this match if needed
-				if timesToSkip > 0 {
-					_ = CronField(rawValue: 0)!.getFieldChecker().increment(nextRun, toMatchValue: part)
-					timesToSkip -= 1
-				}
-				continue currentFieldLoop
-			}
-			return satisfied ? nextRun : nil
-		}
-		return nil
-	}
+                if part.contains(CronRepresentation.ListIdentifier) == false {
+                    satisfied = fieldChecker.isSatisfiedBy(nextRun, value: part)
+                } else {
+                    for listPart: String in part.components(separatedBy: CronRepresentation.ListIdentifier) {
+                        satisfied = fieldChecker.isSatisfiedBy(nextRun, value: listPart)
+                        if satisfied {
+                            break
+                        }
+                    }
+                }
 
-	private func matchIsTheoreticallyPossible(_ date: Date) -> Bool {
-		// TODO: Handle lists and steps
-		guard let year = Int(cronRepresentation.year) else {
-			return true
-		}
+                // If the field is not satisfied, then start over
+                if satisfied == false {
+                    nextRun = fieldChecker.increment(nextRun, toMatchValue: part)
+                    continue iteration
+                }
 
-		var components = DateComponents()
-		components.year = year
-		if let month = Int(cronRepresentation.month) {
-			components.month = month
+                // Skip this match if needed
+                if timesToSkip > 0 {
+                    _ = CronField(rawValue: 0)!.getFieldChecker().increment(nextRun, toMatchValue: part)
+                    timesToSkip -= 1
+                }
+                continue currentFieldLoop
+            }
+            return satisfied ? nextRun : nil
+        }
+        return nil
+    }
+
+    private func matchIsTheoreticallyPossible(_ date: Date) -> Bool {
+        // TODO: Handle lists and steps
+        guard let year = Int(cronRepresentation.year) else {
+            return true
+        }
+
+        var components = DateComponents()
+        components.year = year
+        if let month = Int(cronRepresentation.month) {
+            components.month = month
 
             if month < 1 {
                 return false
             }
-		}
-		let day = Int(cronRepresentation.day) ?? Calendar.current.date(from: components)!.getLastDayOfMonth()
-		//{
-			components.day = day
+        }
+        let day = Int(cronRepresentation.day) ?? Calendar.current.date(from: components)!.getLastDayOfMonth()
+        // {
+        components.day = day
 
-            if day < 1 {
-                return false
-            }
-		//}
-		let dateFromComponents = Calendar.current.date(from: components)!
+        if day < 1 {
+            return false
+        }
+        // }
+        let dateFromComponents = Calendar.current.date(from: components)!
         return date.compare(dateFromComponents) == .orderedAscending || date.compare(dateFromComponents) == .orderedSame
-	}
+    }
+
+    // MARK: - Get components
+
+    public var minute: Int {
+        let stringExpression = stringRepresentation
+        let splitValues = stringExpression.split(separator: " ")
+        if let minute = Int(splitValues[0]) {
+            return minute
+        }
+        return 1
+    }
+
+    public var hour: Int {
+        let stringExpression = stringRepresentation
+        let splitValues = stringExpression.split(separator: " ")
+        if let hour = Int(splitValues[1]) {
+            return hour
+        }
+        return 1
+    }
+
+	public var dayOfMonth: Int {
+        let stringExpression = stringRepresentation
+        let splitValues = stringExpression.split(separator: " ")
+        if let dayOfMonth = Int(splitValues[2]) {
+            return dayOfMonth
+        }
+        return 1
+    }
+	// month returns -1, can be used as 'every' month, i.e. *
+	public var month: Int {
+        let stringExpression = stringRepresentation
+        let splitValues = stringExpression.split(separator: " ")
+        if let dayOfMonth = Int(splitValues[3]) {
+            return dayOfMonth
+        }
+        return -1
+    }
 }

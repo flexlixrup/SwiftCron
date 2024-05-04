@@ -7,9 +7,9 @@ let package = Package(
     products: [
         .library(name: "SwiftCron", targets: ["SwiftCron"]),
     ],
-    dependencies:[],
-        targets: [
-        .target(name: "SwiftCron", dependencies: [], path: "Sources/")
+    dependencies: [],
+    targets: [
+        .target(name: "SwiftCron", dependencies: [], path: "Sources/"),
     ],
     swiftLanguageVersions: [.v5]
 )

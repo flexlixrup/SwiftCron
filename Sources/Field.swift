@@ -1,9 +1,9 @@
 import Foundation
 
 class Field {
-	var fields: NSMutableArray?
+    var fields: NSMutableArray?
 
-	func isSatisfied(_ dateValue: String, value: String) -> Bool {
-		return value == CronRepresentation.DefaultValue || dateValue == value
-	}
+    func isSatisfied(_ dateValue: String, value: String) -> Bool {
+        return value == CronRepresentation.DefaultValue || dateValue == value
+    }
 }
