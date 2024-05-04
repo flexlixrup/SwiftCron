@@ -1,0 +1,206 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+	"%@ %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "%1$@ %2$@"
+		  }
+		}
+	  }
+	},
+	"%@ %@ at %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "%1$@ %2$@ um %3$@"
+		  }
+		}
+	  }
+	},
+	"%@ at %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "%1$@ um %2$@"
+		  }
+		}
+	  }
+	},
+	"%@ of %@ %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "%1$@ von %2$@ %3$@"
+		  }
+		}
+	  }
+	},
+	"Every %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jeder %1$@"
+		  }
+		}
+	  }
+	},
+	"Every %@ minutes on a %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Alle %1$@ Minuten an einem %2$@"
+		  }
+		}
+	  }
+	},
+	"Every %@ of %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jeden %1$@ des %2$@"
+		  }
+		}
+	  }
+	},
+	"Every %@ of the month" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jeder %1$@ des Monats"
+		  }
+		}
+	  }
+	},
+	"Every %@ of the month at %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jeder %1$@ des Monats um %2$@"
+		  }
+		}
+	  }
+	},
+	"Every %@ the %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jeden %1$@ am %2$@"
+		  }
+		}
+	  }
+	},
+	"Every %@ the %@ at %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jeden %1$@ am %2$@ um %3$@"
+		  }
+		}
+	  }
+	},
+	"Every %@ the %@ of %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jeden %1$@ am %2$@ des %3$@"
+		  }
+		}
+	  }
+	},
+	"Every %@ the %@ of %@ at %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jeden %1$@, den %2$@ des %3$@ um %4$@"
+		  }
+		}
+	  }
+	},
+	"Every day" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jeden Tag"
+		  }
+		}
+	  }
+	},
+	"Every day at %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jeden Tag um %1$@"
+		  }
+		}
+	  }
+	},
+	"Every hour at %@ minutes" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jede Stunde um %1$@ Minuten"
+		  }
+		}
+	  }
+	},
+	"Every hour at %@ minutes on the %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jede Stunde um %1$@ Minuten am %2$@"
+		  }
+		}
+	  }
+	},
+	"Every minute" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jede Minute"
+		  }
+		}
+	  }
+	},
+	"Every minute on a %@" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jede Minute an einem %1$@"
+		  }
+		}
+	  }
+	},
+	"Every weekday" : {
+	  "localizations": {
+		"de": {
+		  "stringUnit": {
+			"state": "translated",
+			"value": "Jeden Wochentag"
+		  }
+		}
+	  }
+	}
+  },
+  "version": "1.0"
+}

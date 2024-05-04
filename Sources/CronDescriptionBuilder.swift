@@ -43,20 +43,20 @@ class CronDescriptionBuilder {
 
     private static func descriptionWithNoneBiggest(_ cronRepresentation: CronRepresentation, length _: CronDescriptionLength) -> String {
         if CronRepresentation.isDefault(cronRepresentation.weekday) {
-            return "Every minute"
+			return String(localized: "Every minute", bundle: .module)
         } else {
             let weekday = DateFormatter.convertStringToDaysOfWeek(cronRepresentation.weekday)
-            return "Every minute on a \(weekday)"
+            return String(localized: "Every minute on a \(weekday)", bundle: .module)
         }
     }
 
     private static func descriptionWithMinuteBiggest(_ cronRepresentation: CronRepresentation, length _: CronDescriptionLength) -> String {
         let minutes = DateFormatter.minuteStringWithMinute(cronRepresentation.minute)
         if CronRepresentation.isDefault(cronRepresentation.weekday) {
-            return "Every hour at \(minutes) minutes"
+            return String(localized: "Every hour at \(minutes) minutes", bundle: .module)
         } else {
             let weekday = DateFormatter.convertStringToDaysOfWeek(cronRepresentation.weekday)
-            return "Every \(minutes) minutes on a \(weekday)"
+            return String(localized: "Every \(minutes) minutes on a \(weekday)", bundle: .module)
         }
     }
 
@@ -66,23 +66,23 @@ class CronDescriptionBuilder {
         if CronRepresentation.isDefault(cronRepresentation.weekday) {
             switch length {
             case .long:
-                return "Every day at \(time)"
+                return String(localized: "Every day at \(time)", bundle: .module)
             case .short:
-                return "Every day"
+                return String(localized: "Every day", bundle: .module)
             }
         } else {
             let weekday = DateFormatter.convertStringToDaysOfWeek(cronRepresentation.weekday)
             var desc: String
             if weekday == EveryDay {
-                desc = "Every day"
+                desc = String(localized: "Every day", bundle: .module)
             } else if weekday == EveryWeekday {
-                desc = "Every weekday"
+                desc = String(localized: "Every weekday", bundle: .module)
             } else {
-                desc = "Every \(weekday)"
+                desc = String(localized: "Every \(weekday)", bundle: .module)
             }
             switch length {
             case .long:
-                return "\(desc) at \(time)"
+                return String(localized: "\(desc) at \(time)", bundle: .module)
             case .short:
                 return desc
             }
@@ -94,23 +94,23 @@ class CronDescriptionBuilder {
 
         if CronRepresentation.isDefault(cronRepresentation.hour) {
             let minutes = DateFormatter.minuteStringWithMinute(cronRepresentation.minute)
-            return "Every hour at \(minutes) minutes on the \(day)"
+            return String(localized: "Every hour at \(minutes) minutes on the \(day)", bundle: .module)
         } else {
             let time = DateFormatter.timeStringWithHour(cronRepresentation.hour, minute: cronRepresentation.minute)
             if CronRepresentation.isDefault(cronRepresentation.weekday) {
                 switch length {
                 case .long:
-                    return "Every \(day) of the month at \(time)"
+                    return String(localized: "Every \(day) of the month at \(time)", bundle: .module)
                 case .short:
-                    return "Every \(day) of the month"
+                    return String(localized: "Every \(day) of the month", bundle: .module)
                 }
             } else {
                 let weekday = DateFormatter.convertStringToDaysOfWeek(cronRepresentation.weekday)
                 switch length {
                 case .long:
-                    return "Every \(weekday) the \(day) at \(time)"
+                    return String(localized: "Every \(weekday) the \(day) at \(time)", bundle: .module)
                 case .short:
-                    return "Every \(weekday) the \(day)"
+                    return String(localized: "Every \(weekday) the \(day)", bundle: .module)
                 }
             }
         }
@@ -121,11 +121,11 @@ class CronDescriptionBuilder {
         let day = Int(cronRepresentation.day)!.ordinal
         let month = Int(cronRepresentation.month)!.convertToMonth()
 
-        let desc = "Every \(day) of \(month)"
+        let desc = String(localized: "Every \(day) of \(month)", bundle: .module)
         if CronRepresentation.isDefault(cronRepresentation.weekday) {
             switch length {
             case .long:
-                return "\(desc) at \(time)"
+                return String(localized: "\(desc) at \(time)", bundle: .module)
             case .short:
                 return desc
             }
@@ -133,9 +133,9 @@ class CronDescriptionBuilder {
             let weekday = DateFormatter.convertStringToDaysOfWeek(cronRepresentation.weekday)
             switch length {
             case .short:
-                return "Every \(weekday) the \(day) of \(month)"
+                return String(localized: "Every \(weekday) the \(day) of \(month)", bundle: .module)
             case .long:
-                return "Every \(weekday) the \(day) of \(month) at \(time)"
+                return String(localized: "Every \(weekday) the \(day) of \(month) at \(time)", bundle: .module)
             }
         }
     }
@@ -145,21 +145,21 @@ class CronDescriptionBuilder {
         let day = Int(cronRepresentation.day)!.ordinal
         let month = Int(cronRepresentation.month)!.convertToMonth()
 
-        let desc = "\(day) of \(month) \(cronRepresentation.year)"
+        let desc = String(localized: "\(day) of \(month) \(cronRepresentation.year)", bundle: .module)
         if CronRepresentation.isDefault(cronRepresentation.weekday) {
             switch length {
             case .short:
                 return desc
             case .long:
-                return "\(desc) at \(time)"
+                return String(localized: "\(desc) at \(time)", bundle: .module)
             }
         } else {
             let weekday = DateFormatter.convertStringToDaysOfWeek(cronRepresentation.weekday)
             switch length {
             case .short:
-                return "\(weekday) \(desc)"
+                return String(localized: "\(weekday) \(desc)", bundle: .module)
             case .long:
-                return "\(weekday) \(desc) at \(time)"
+                return String(localized: "\(weekday) \(desc) at \(time)", bundle: .module)
             }
         }
     }
